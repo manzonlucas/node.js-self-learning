@@ -58,7 +58,7 @@ async function sendMessage(e) {
       body: JSON.stringify(payload)
     });
 
-    inputName.value = '';
+    // inputName.value = '';
     inputMsg.value = '';
   }
   catch (err) {
