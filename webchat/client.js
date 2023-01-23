@@ -9,6 +9,8 @@ const inputMsg = document.querySelector('#msg');
 let messages = [];
 const baseURL = 'http://localhost:3000';
 
+const socket = io();
+
 async function getMessages() {
   try {
     const response = await fetch(`${baseURL}/messages`);
