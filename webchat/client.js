@@ -11,6 +11,10 @@ const baseURL = 'http://localhost:3000';
 
 const socket = io();
 
+window.addEventListener("load", async () => {
+  await getMessagesAndSetChat();
+})
+
 async function getMessages() {
   try {
     const response = await fetch(`${baseURL}/messages`);
@@ -23,6 +27,7 @@ async function getMessages() {
 }
 
 function setChat() {
+  ul.innerHTML = '';
   messages.forEach(message => {
     const li = document.createElement('li');
     li.innerHTML = `<b>${message.name}:</b> ${message.message}`;
@@ -30,10 +35,12 @@ function setChat() {
   })
 }
 
-window.addEventListener("load", async () => {
-  await getMessages()
+async function getMessagesAndSetChat() {
+  await getMessages();
   setChat();
-})
+}
+
+form.addEventListener('submit', sendMessage);
 
 async function sendMessage(e) {
   e.preventDefault();
@@ -50,10 +57,15 @@ async function sendMessage(e) {
       },
       body: JSON.stringify(payload)
     });
+
+    inputName.value = '';
+    inputMsg.value = '';
   }
   catch (err) {
     console.log(err);
   }
 }
 
-form.addEventListener('submit', sendMessage);
+socket.on('message', async () => {
+  await getMessagesAndSetChat();
+})
