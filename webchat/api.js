@@ -31,15 +31,17 @@ app.get('/messages', (req, res) => {
   Message.find({}, (err, messages) => res.send(messages));
 })
 
-app.post('/messages', (req, res) => {
+app.post('/messages', async (req, res) => {
   const message = new Message(req.body);
-  message.save()
-    .then(() => {
-      io.emit('message', req.body);
-      res.sendStatus(200);
-    })
-    .catch(err => {
-      sendStatus(500);
-      return console.log(err);
-    })
+  const savedMessage = await message.save()
+
+  const censoredWord = await Message.findOne({ message: 'badword' })
+  if (censoredWord) {
+    await Message.deleteOne({ _id: censoredWord.id })
+    await console.log('censored word!');
+  }
+  else {
+    io.emit('message', req.body);
+    res.sendStatus(200);
+  }
 })
