@@ -16,5 +16,6 @@ app.get('/messages', (req, res) => {
 
 app.post('/messages', (req, res) => {
   fakeData.push(req.body);
+  console.log(req.body);
   res.sendStatus(200);
 })

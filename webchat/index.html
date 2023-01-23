@@ -13,12 +13,15 @@
 <body>
   <div class="container bg-primary-subtle p-5">
     <div class="jumbotron">
-      <h1 class="display-4">Send message</h1>
-      <br>
-      <input type="text" class="form-control" placeholder="Name">
-      <br>
-      <button class="btn btn-success" id="sendBtn">Send</button>
+      <h1 class="display-4">WebChat</h1>
+      <form>
+        <input type="text" class="form-control" placeholder="Name" id="name">
+        <input type="text" class="form-control" placeholder="Your message" id="msg">
+        <button class="btn btn-success" id="sendBtn">Send</button>
+      </form>
     </div>
+
+    <hr>
 
     <div id="chatContainer">
     </div>
