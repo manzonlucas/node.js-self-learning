@@ -5,6 +5,11 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
+const mongoose = require('mongoose');
+// dbURL, where first 'user' is the user, and 2nd one is the password.
+// in this case we are logging in with: user: user, pass: user.
+const dbURL = 'mongodb+srv://user:user@learning-node.vbpuzae.mongodb.net/?retryWrites=true&w=majority';
+const Message = require('./models/Message');
 
 const fakeData = require('./fakeData.json');
 
@@ -19,12 +24,22 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 });
 
+mongoose.set('strictQuery', true);
+mongoose.connect(dbURL);
+
 app.get('/messages', (req, res) => {
-  res.send(fakeData);
+  Message.find({}, (err, messages) => res.send(messages));
 })
 
 app.post('/messages', (req, res) => {
-  fakeData.push(req.body);
-  io.emit('message', req.body);
-  res.sendStatus(200);
+  const message = new Message(req.body);
+  message.save()
+    .then(() => {
+      io.emit('message', req.body);
+      res.sendStatus(200);
+    })
+    .catch(err => {
+      sendStatus(500);
+      return console.log(err);
+    })
 })

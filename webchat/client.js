@@ -58,8 +58,8 @@ async function sendMessage(e) {
       body: JSON.stringify(payload)
     });
 
-    // inputName.value = '';
     inputMsg.value = '';
+    await inputMsg.focus();
   }
   catch (err) {
     console.log(err);
